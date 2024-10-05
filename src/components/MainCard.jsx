@@ -85,9 +85,7 @@ const MainCard = () => {
   const handleFileChange = (event) => {
     setFileInput(event.target.files[0]);
     
-    // Send file to backend
-    const formData = new FormData();
-    formData.append("file", event.target.files[0]);
+  
   };
   
 
