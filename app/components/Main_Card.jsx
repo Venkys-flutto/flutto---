@@ -195,7 +195,7 @@ const MainCard = () => {
                 </label>
                 <input
                   type="file"
-                  accept=".csv"
+                  accept=".xlsx"
                   onChange={handleFileChange}
                   className="file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-teal-600 file:text-white hover:file:bg-teal-500 transition-all duration-300 cursor-pointer shadow-lg"
                 />
