@@ -51,36 +51,27 @@ const MainCard = () => {
       }
       setCurrentCard(2);
     } else if (currentCard === 2) {
-      const jsonData = {
-        aiModel,
-        description,
-        fileInput: fileInput?.name || "",
-        contentType,
-      };
-      setGeneratedJson(jsonData);
-      setCurrentCard(3);
-    } else if (currentCard === 3) {
-      // Backend should get the output
+      // Prepare form data for file and other inputs
+      const formData = new FormData();
+      formData.append("file", fileInput);  // Append file
+      formData.append("aiModel", aiModel); // Append AI model
+      formData.append("description", description); // Append description
+  
       try {
-        const response = await fetch("/api/output", {
-          // Backend endpoint
+        const response = await fetch("/datacollector/", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(generatedJson),
+          body: formData,  // Send form data as multipart
         });
+  
         const data = await response.json();
-        setBackendOutput(data.output); // backend returns the generated data
+        setBackendOutput(data.response_data);  // Set backend output in state
       } catch (error) {
         console.error("Error fetching backend output:", error);
       }
-      setCurrentCard(4);
-    } else if (currentCard === 4) {
-      setCurrentCard(1);
+  
+      setCurrentCard(3);
     }
   };
-
   // For File input
   const handleFileChange = (event) => {
     setFileInput(event.target.files[0]);
