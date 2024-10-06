@@ -35,6 +35,7 @@ const MainCard = () => {
     description: "",
     backendOutput: null,
   });
+  const [isLoading, setIsLoading] = useState(false);//Added Loading
 
   const handlePrev = () => {
     if (currentCard > 1) {
@@ -56,21 +57,56 @@ const MainCard = () => {
         return;
       }
       if (!formData.fileInput) {
-        alert("Please upload a CSV file");
+        alert("Please upload a Excel file");
         return;
       }
-      const jsonData = {
-        ...formData,
-        fileInput: formData.fileInput ? formData.fileInput.name : "",
-      };
-      setFormData(jsonData);
-      console.log("Form Data:", jsonData); // Log formData to console
+      // const jsonData = {
+      //   ...formData,
+      //   fileInput: formData.fileInput ? formData.fileInput.name : "",
+      // };
+      // setFormData(jsonData);
+      // console.log("Form Data:", jsonData); // Log formData to console
       setCurrentCard(3);
     } else if (currentCard === 3) {
-      // Simulate sending to backend and display output in card
-      console.log("Sending to backend...");
-      console.log("Final Form Data before sending:", formData); // Log formData again
-      setCurrentCard(4);
+      // // Simulate sending to backend and display output in card
+      // console.log("Sending to backend...");
+      // console.log("Final Form Data before sending:", formData); // Log formData again
+      try{
+        setIsLoading(true);
+        const backendUrl = "http://localhost:5500/datacollector/";
+
+        const finalFormData = new FormData();
+        finalFormData.append("aiModel", formData.aiModel);
+        finalFormData.append("template_name", formData.contentType[0]);
+        finalFormData.append("file", formData.fileInput);
+        finalFormData.append("description", formData.description);
+  
+        const response = await fetch(backendUrl, {
+          method: "POST",
+          body: finalFormData,
+        });
+  
+        if(!response.ok) {
+          alert("Something went wrong. Please try again.");
+          setIsLoading(false);
+          return;
+        }
+  
+        const result = await response.json();
+        setFormData((prevData) => ({
+          ...prevData,
+          backendOutput: result,
+        }));
+        setIsLoading(false);
+        setCurrentCard(4);
+      } catch (error) {
+        setIsLoading(false);
+        console.error(error);
+        alert("Something went wrong. Please try again.");
+        return;
+      }
+
+
     } else if (currentCard === 4) {
       // Reset the formData and redirect to the first card
       setFormData({
@@ -191,7 +227,7 @@ const MainCard = () => {
                 />
 
                 <label className="block text-gray-700 font-medium mb-2">
-                  Upload CSV File:
+                  Upload Excel File:
                 </label>
                 <input
                   type="file"
@@ -203,7 +239,7 @@ const MainCard = () => {
             </div>
           )}
 
-          {currentCard === 3 && (
+          {currentCard === 3 && isLoading && (
             <div className="bg-white bg-opacity-35 backdrop-blur-md rounded-[50px] shadow-xl p-8 max-w-3xl w-full flex flex-col lg:flex-row items-center justify-between h-auto min-h-[300px]">
               <div className="flex flex-row justify-center items-center space-x-5">
                 <div className="text-4xl">
@@ -223,7 +259,7 @@ const MainCard = () => {
                   Output Generated!
                 </div>
                 <div className="text-2xl font-semibold text-left text-gray-600">
-                  <pre>{JSON.stringify(formData, null, 2)}</pre>
+                  <pre>{JSON.stringify(formData.backendOutput, null, 2)}</pre>
                 </div>
               </div>
             </div>
