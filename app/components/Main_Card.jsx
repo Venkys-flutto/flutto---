@@ -35,7 +35,7 @@ const MainCard = () => {
     description: "",
     backendOutput: null,
   });
-  const [isLoading, setIsLoading] = useState(false);//Added Loading
+  // const [isLoading, setIsLoading] = useState(false);//Added Loading
 
   const handlePrev = () => {
     if (currentCard > 1) {
@@ -72,7 +72,7 @@ const MainCard = () => {
       // console.log("Sending to backend...");
       // console.log("Final Form Data before sending:", formData); // Log formData again
       try{
-        setIsLoading(true);
+        // setIsLoading(true);
         const backendUrl = "http://localhost:5500/datacollector/";
 
         const finalFormData = new FormData();
@@ -88,7 +88,7 @@ const MainCard = () => {
   
         if(!response.ok) {
           alert("Something went wrong. Please try again.");
-          setIsLoading(false);
+          // setIsLoading(false);
           return;
         }
   
@@ -97,10 +97,10 @@ const MainCard = () => {
           ...prevData,
           backendOutput: result,
         }));
-        setIsLoading(false);
+        // setIsLoading(false);
         setCurrentCard(4);
       } catch (error) {
-        setIsLoading(false);
+        // setIsLoading(false);
         console.error(error);
         alert("Something went wrong. Please try again.");
         return;
@@ -164,7 +164,7 @@ const MainCard = () => {
         </button>
         <div className="flex-grow">
           {currentCard === 1 && (
-            <div className="bg-white bg-opacity-35 backdrop-blur-md rounded-[50px] shadow-xl p-8 max-w-3xl w-full flex flex-col lg:flex-row items-center justify-between h-auto min-h-[400px]">
+            <div className="bg-white bg-opacity-35 backdrop-blur-md rounded-[50px] shadow-xl p-8 max-w-3xl  flex flex-col lg:flex-row items-center justify-between h-auto min-h-[400px] w-[750px]">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="text-4xl font-bold text-left text-gray-800">
                   What would you like to generate?
@@ -207,7 +207,7 @@ const MainCard = () => {
           )}
 
           {currentCard === 2 && (
-            <div className="bg-white bg-opacity-35 backdrop-blur-md rounded-[50px] shadow-xl p-8 max-w-3xl w-full flex flex-col lg:flex-row items-center justify-between h-auto min-h-[300px]">
+            <div className="bg-white bg-opacity-35 backdrop-blur-md rounded-[50px] shadow-xl p-8 max-w-3xl  flex flex-col lg:flex-row items-center justify-between h-auto min-h-[400px] w-[750px]">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="text-4xl font-bold text-left text-gray-800 mb-4">
                   Upload CSV and Describe
@@ -239,8 +239,8 @@ const MainCard = () => {
             </div>
           )}
 
-          {currentCard === 3 && isLoading && (
-            <div className="bg-white bg-opacity-35 backdrop-blur-md rounded-[50px] shadow-xl p-8 max-w-3xl w-full flex flex-col lg:flex-row items-center justify-between h-auto min-h-[300px]">
+          {currentCard === 3 && (
+            <div className="bg-white bg-opacity-35 backdrop-blur-md rounded-[50px] shadow-xl p-8 max-w-3xl  flex flex-col lg:flex-row items-center justify-between h-auto min-h-[400px] w-[750px]">
               <div className="flex flex-row justify-center items-center space-x-5">
                 <div className="text-4xl">
                   <FontAwesomeIcon icon={faSpinner} spin />
@@ -253,7 +253,7 @@ const MainCard = () => {
           )}
 
           {currentCard === 4 && (
-            <div className="bg-white bg-opacity-35 backdrop-blur-md rounded-[50px] shadow-xl p-8 max-w-3xl w-full flex flex-col lg:flex-row items-center justify-between h-auto min-h-[300px]">
+            <div className="bg-white bg-opacity-35 backdrop-blur-md rounded-[50px] shadow-xl p-8 max-w-3xl flex flex-col lg:flex-row items-center justify-between h-auto min-h-[400px] w-[750px]">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="text-4xl font-bold text-left text-gray-800">
                   Output Generated!
