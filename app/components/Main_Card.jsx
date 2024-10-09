@@ -167,7 +167,7 @@ const MainCard = () => {
             <div className="bg-white bg-opacity-35 backdrop-blur-md rounded-[50px] shadow-xl p-8 max-w-3xl  flex flex-col lg:flex-row items-center justify-between h-auto min-h-[400px] w-[750px]">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="text-4xl font-bold text-left text-gray-800">
-                  What would you like to generate?
+                  <h1>What would you like to generate?</h1>
                 </div>
                 <div className="flex items-center space-x-2 pt-8 sm:m-4">
                   <select
@@ -183,9 +183,20 @@ const MainCard = () => {
                     <option>OpenAI (Default)</option>
                     <option>llama</option>
                   </select>
-                  <button className="text-2xl">
+                  {/* <button className="text-2xl">
                     <FontAwesomeIcon icon={faCircleInfo} className="w=6 h=6" />
-                  </button>
+                  </button> */}
+                  {/* Button with Tooltip */}
+              <button className="group relative inline-flex items-center justify-center p-0.5 text-2xl text-gray-900 rounded-lg bg-transparent focus:outline-none">
+                <FontAwesomeIcon icon={faCircleInfo} className="w-6 h-6" />
+                
+                {/* Tooltip Container */}
+                <div className="hidden group-hover:block absolute left-full top-1/2 z-50 -translate-y-1/2 flex-col items-start rounded-sm text-center text-sm text-slate-300 ml-2">
+                  <div className="rounded-md bg-black py-1 px-2">
+                    <p className="whitespace-nowrap">Choose AI Model</p>
+                  </div>              
+                </div>
+                </button>
                 </div>
               </div>
               <div className="flex flex-col space-y-6 pb-4 px-5 mt-4 sm:mt-0 md:mt-4">
@@ -213,9 +224,21 @@ const MainCard = () => {
                   Upload CSV and Describe
                 </div>
                 <div className="flex justify-start mb-7">
-                  <button className="text-2xl">
+                  {/* <button className="text-2xl">
                     <FontAwesomeIcon icon={faCircleInfo} className="w=6 h=6" />
-                  </button>
+                  </button> */}
+
+                  {/* Button with Tooltip */}
+              <button className="group relative inline-flex items-center justify-center p-0.5 text-2xl text-gray-900 rounded-lg bg-transparent focus:outline-none">
+                <FontAwesomeIcon icon={faCircleInfo} className="w-6 h-6" />
+                
+                {/* Tooltip Container */}
+                <div className="hidden group-hover:block absolute left-full top-1/2 z-50 -translate-y-1/2 flex-col items-start rounded-sm text-center text-sm text-slate-300 ml-2">
+                  <div className="rounded-sm bg-black py-1 px-2">
+                    <p className="whitespace-nowrap">Upload Your File and Describe </p>
+                  </div>              
+                </div>
+                </button>
                 </div>
               </div>
               <div className="flex flex-col space-y-6 pb-4 px-5 w-full lg:w-auto">
@@ -245,7 +268,7 @@ const MainCard = () => {
                 <div className="text-4xl">
                   <FontAwesomeIcon icon={faSpinner} spin />
                 </div>
-                <div className="text-4xl font-bold text-left text-gray-800">
+                <div className="text-4xl font-bold text-center text-gray-800">
                   Generating Output...
                 </div>
               </div>
