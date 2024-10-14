@@ -124,7 +124,7 @@ const MainCard = () => {
     console.log("Final Form Data before sending:", formData); // Log formData again
     try {
       setIsLoading(true);
-      const backendUrl = "http://datacollector:8000/datacollector/";
+      const backendUrl = "http://localhost:5500/datacollector/";
 
       const finalFormData = new FormData();
       finalFormData.append("aiModel", formData.aiModel);
