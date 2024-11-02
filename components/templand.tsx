@@ -50,37 +50,39 @@ export default function LandingPage() {
         </Button>
       </header>
       {showMobileMenu && (
-        <nav className="md:hidden border-b p-4 space-y-2">
-          <Link className="block text-sm font-medium hover:underline underline-offset-4" href="#features">
-            Features
-          </Link>
-          <Link className="block text-sm font-medium hover:underline underline-offset-4" href="#benefits">
-            Benefits
-          </Link>
-          <Link className="block text-sm font-medium hover:underline underline-offset-4" href="#contact">
-            Contact
-          </Link>
-          {session?.user ? (
-            <div className="flex justify-center">
-              <ProfileMenu />
-            </div>
-          ) : (
-            <Button variant="outline" size="sm" onClick={() => router.push('/login')} className="w-full">
-              Login
-            </Button>
-          )}
+        <nav className="md:hidden absolute right-0 top-14 w-64 bg-white/80 backdrop-blur-md shadow-lg border-l border-b border-gray-100 z-50">
+          <div className="p-4 space-y-2 flex flex-col items-end">
+            <Link className="block text-sm font-medium hover:underline underline-offset-4" href="#features">
+              Features
+            </Link>
+            <Link className="block text-sm font-medium hover:underline underline-offset-4" href="#benefits">
+              Benefits
+            </Link>
+            <Link className="block text-sm font-medium hover:underline underline-offset-4" href="#contact">
+              Contact
+            </Link>
+            {session?.user ? (
+              <div className="flex justify-end w-full">
+                <ProfileMenu />
+              </div>
+            ) : (
+              <Button variant="outline" size="sm" onClick={() => router.push('/login')} className="w-full">
+                Login
+              </Button>
+            )}
+          </div>
         </nav>
       )}
       <main className="flex-1 min-h-screen">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-br from-primary via-accent-purple to-accent-pink">
+        <section className="w-full py-8 md:py-16 lg:py-24 xl:py-32 bg-gradient-to-br from-primary via-accent-purple to-accent-pink">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
                 
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-100 animate-fade-in pl-[100px]">
+                <h1 className="text-2xl font-bold tracking-tighter sm:text-3xl md:text-4xl lg:text-5xl/none bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-100 animate-fade-in px-4 md:px-[100px]">
                   Revolutionize Your Business Operations with AI
                 </h1>
-                <p className="mx-auto max-w-[700px] text-lg sm:text-xl md:text-2xl text-gray-100 animate-fade-in-up ">
+                <p className="mx-auto max-w-[700px] text-base sm:text-lg md:text-xl text-gray-100 animate-fade-in-up px-4">
                   Flutto Ai Services: AI-powered content generation and support platform for documentation, customer support, and employee training.
                 </p>
               </div>
@@ -89,6 +91,7 @@ export default function LandingPage() {
                   size="lg" 
                   variant="default" 
                   className="bg-secondary hover:bg-secondary-foreground hover:scale-105 transition-transform text-white"
+                  onClick={() => router.push('/login')}
                 >
                   Get Started
                 </Button>
@@ -96,6 +99,7 @@ export default function LandingPage() {
                   size="lg" 
                   variant="outline" 
                   className="bg-white/10 backdrop-blur-sm text-white border-white/20 hover:bg-white/20 hover:scale-105 transition-transform"
+                  onClick={() => router.push('/login')}
                 >
                   Learn More
                 </Button>
@@ -104,13 +108,13 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="features" className="px-4 md:px-6 w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-background to-gray-50 dark:from-background-dark dark:to-gray-900">
-          <div className="container px-4 md:px-6 pl-[100px]">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent-purple to-accent-pink">
+        <section id="features" className="px-4 py-8 md:py-16 lg:py-24 w-full bg-gradient-to-b from-background to-gray-50 dark:from-background-dark dark:to-gray-900">
+          <div className="container mx-auto">
+            <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl md:text-4xl text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent-purple to-accent-pink px-4">
               Comprehensive AI Solutions
             </h2>
-            <Tabs defaultValue="documentation" className="w-full pl-[100px]">
-              <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-6 mb-4">
+            <Tabs defaultValue="documentation" className="w-full px-4 md:px-[100px]">
+              <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 mb-4 overflow-x-auto">
                 <TabsTrigger value="documentation">Documentation</TabsTrigger>
                 <TabsTrigger value="support">L0 Support</TabsTrigger>
                 <TabsTrigger value="upskilling">Employee Upskilling</TabsTrigger>
@@ -206,12 +210,12 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="benefits" className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-gray-50 to-background dark:from-gray-900 dark:to-background-dark">
-          <div className="container px-4 md:px-6">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent-teal to-secondary ">
+        <section id="benefits" className="w-full py-8 md:py-16 lg:py-24 bg-gradient-to-b from-gray-50 to-background dark:from-gray-900 dark:to-background-dark">
+          <div className="container mx-auto px-4 md:px-6">
+            <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl md:text-4xl text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent-teal to-secondary">
               Key Benefits
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pl-[100px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 px-4 md:px-[100px]">
               <Card className="group transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <CardHeader>
                   <div className="transition-transform duration-300 group-hover:scale-110">
@@ -282,18 +286,18 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="contact" className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-br from-primary/5 via-accent-purple/5 to-accent-pink/5">
-          <div className="container px-4 md:px-6">
+        <section id="contact" className="w-full py-8 md:py-16 lg:py-24 bg-gradient-to-br from-primary/5 via-accent-purple/5 to-accent-pink/5">
+          <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent-purple to-accent-pink">
+                <h2 className="text-2xl font-bold tracking-tighter sm:text-3xl md:text-4xl bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent-purple to-accent-pink px-4">
                   Ready to Transform Your Business?
                 </h2>
                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
                   Get in touch with us to see how Flutto Ai can revolutionize your operations.
                 </p>
               </div>
-              <div className="w-full max-w-sm space-y-2">
+              <div className="w-full max-w-sm space-y-2 px-4">
                 <form className="flex flex-col space-y-4">
                   <Input 
                     className="max-w-lg flex-1 transition-all duration-300 focus:ring-2 focus:ring-primary/50 hover:border-primary/50 bg-white/80 backdrop-blur-sm" 
@@ -312,7 +316,7 @@ export default function LandingPage() {
           </div>
         </section>
       </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t bg-gradient-to-r from-background to-gray-50 dark:from-background-dark dark:to-gray-900">
+      <footer className="flex flex-col gap-2 sm:flex-row py-4 md:py-6 w-full shrink-0 items-center px-4 md:px-6 border-t bg-gradient-to-r from-background to-gray-50 dark:from-background-dark dark:to-gray-900">
         <p className="text-xs text-gray-500 dark:text-gray-400">
           © 2024 Flutto Ai Services. All rights reserved.
         </p>
