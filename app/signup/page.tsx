@@ -42,13 +42,6 @@ export default function SignUpPage() {
     setIsLoading(prev => ({ ...prev, email: true }))
     
     try {
-      // Log the request
-      console.log('Sending signup request with data:', {
-        name: formData.name,
-        email: formData.email,
-        password: '[REDACTED]'
-      })
-
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: {
@@ -61,15 +54,7 @@ export default function SignUpPage() {
         }),
       })
 
-      let result
-      const responseText = await response.text()
-      
-      try {
-        result = responseText ? JSON.parse(responseText) : {}
-      } catch (error) {
-        console.error('Failed to parse response:', responseText)
-        throw new Error('Invalid server response')
-      }
+      const result = await response.json()
 
       if (!response.ok) {
         throw new Error(result.error || 'Signup failed')

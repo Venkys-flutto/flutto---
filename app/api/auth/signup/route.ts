@@ -4,13 +4,7 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(request: Request) {
   try {
-    // Log the incoming request
-    console.log('Received signup request')
-    
-    // Parse the request body
     const body = await request.json()
-    console.log('Request body:', body)
-
     const { name, email, password } = body
 
     if (!name || !email || !password) {
@@ -54,8 +48,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Signup error:', error)
     return NextResponse.json({
-      error: "Internal server error",
-      details: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : "Internal server error"
     }, { status: 500 })
   }
 } 

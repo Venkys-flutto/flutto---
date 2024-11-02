@@ -38,9 +38,11 @@ export default function LandingPage() {
           {session?.user ? (
             <ProfileMenu />
           ) : (
-            <Button variant="outline" size="sm" className="w-full" color="primary" onClick={() => router.push('/login')}>
+            <div className="flex justify-center text-gray-600">
+            <Button variant="outline"  size="sm" className="w-full" onClick={() => router.push('/login')}>
               Login
             </Button>
+            </div>
           )}
         </nav>
         <Button variant="outline" size="sm" className="md:hidden" onClick={() => setShowMobileMenu(!showMobileMenu)}>
