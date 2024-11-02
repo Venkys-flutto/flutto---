@@ -212,18 +212,18 @@ function LoginContent() {
                   <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white dark:bg-gray-800 px-2 text-gray-500">
+                  <span className="bg-white px-2 text-gray-500">
                     Or continue with
                   </span>
                 </div>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
-                {error && (
-                  <div className="p-3 text-sm text-red-500 bg-red-100 dark:bg-red-900/30 rounded-md">
-                    {error}
-                  </div>
-                )}
+              {error && (
+                <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md mt-2">
+                  {error}
+                </div>
+              )}
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-primary dark:text-white">Email</Label>
                   <Input 
