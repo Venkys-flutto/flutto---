@@ -8,9 +8,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Cpu } from "lucide-react"
 import Link from "next/link"
 import { useSearchParams, useRouter } from 'next/navigation'
+import { Suspense } from 'react'
 
-
-export default function LoginPage() {
+// Create a client component that uses useSearchParams
+function LoginContent() {
   const [isLoading, setIsLoading] = useState<{[key: string]: boolean}>({})
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -270,5 +271,14 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+// Main page component
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   )
 } 
