@@ -91,7 +91,7 @@ export default function LandingPage() {
                   size="lg" 
                   variant="default" 
                   className="bg-secondary hover:bg-secondary-foreground hover:scale-105 transition-transform text-white"
-                  onClick={() => router.push('/login')}
+                  onClick={() => router.push('/initialquiz')}
                 >
                   Get Started
                 </Button>
