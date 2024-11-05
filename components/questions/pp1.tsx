@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { motion, AnimatePresence } from "framer-motion"
-import { saveAs } from 'file-saver'
+//import { saveAs } from 'file-saver'
 import { Input } from "@/components/ui/input"
 
 interface Question {
@@ -157,7 +157,7 @@ export default function PP1() {
   const [objectiveAnswers, setObjectiveAnswers] = useState<(string | null)[]>(new Array(objectiveParameters.length).fill(null))
   const [customInputs, setCustomInputs] = useState<string[]>(new Array(objectiveParameters.length).fill(''))
   const [showResult, setShowResult] = useState(false)
-  const [score, setScore] = useState(0)
+  //const [score, setScore] = useState(0)
   const [showObjective, setShowObjective] = useState(false)
   const [slideDirection, setSlideDirection] = useState<'right' | 'left'>('right')
   const [currentObjective, setCurrentObjective] = useState(0)
@@ -262,7 +262,7 @@ export default function PP1() {
     setCurrentQuestion(0)
     setAnswers(new Array(questions.length).fill(null))
     setShowResult(false)
-    setScore(0)
+    //setScore(0)
   }
 
   const generateResultJSON = () => {
