@@ -5,10 +5,14 @@ import LinkedIn from "next-auth/providers/linkedin"
 import AzureADProvider from "next-auth/providers/azure-ad"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { compare } from "bcrypt"
-import { prisma } from "@/lib/prisma"
 import { JWT } from "next-auth/jwt"
+import { PrismaClient } from "@prisma/client"
+//import { PrismaAdapter } from "@auth/prisma-adapter"
+
+const prisma = new PrismaClient();
 
 const authOptions: AuthOptions = {
+ 
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -19,7 +23,7 @@ const authOptions: AuthOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
           throw new Error('Please enter an email and password')
-        }
+        }        
 
         const user = await prisma.user.findUnique({
           where: {
@@ -73,6 +77,7 @@ const authOptions: AuthOptions = {
     strategy: "jwt"
   },
   callbacks: {
+    
     async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id

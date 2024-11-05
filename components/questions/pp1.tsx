@@ -232,9 +232,29 @@ export default function PP1() {
         }))
       }
 
-      const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' })
-      saveAs(blob, 'quiz-results.json')
-      setShowResult(true)
+      try {
+        // Send data to the endpoint
+        const response = await fetch('/api/datacollector', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',// for the server to know what type of data is being sent
+          },
+          body: JSON.stringify(results)
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Server response:', data);
+
+        setShowResult(true)
+      } catch (error) {
+        console.error('Error sending data:', error);
+        // You might want to show an error message to the user
+        alert('Failed to submit quiz results. Please try again.');
+      }
     }
   }
 
@@ -267,29 +287,44 @@ export default function PP1() {
         >
           <Card className="w-full shadow-lg border border-white/20 bg-white/80 backdrop-blur-md">
             <CardHeader className="bg-gradient-to-r from-primary/10 to-accent-purple/10">
-              <CardTitle className="text-3xl text-center text-primary">Quiz Results</CardTitle>
+              <CardTitle className="text-3xl text-center text-primary">Parameters Collected</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6 p-8">
-              <div className="text-center space-y-4">
-                <p className="text-2xl font-semibold text-gray-700">
-                  Your Score: {score} out of {questions.length}
-                </p>
-                <p className="text-gray-600">
-                  {score === questions.length ? "Perfect score! 🎉" : 
-                   score >= questions.length * 0.7 ? "Great job! 👏" : 
-                   score >= questions.length * 0.5 ? "Good effort! 💪" : 
-                   "Keep practicing! 📚"}
-                </p>
+              {/* Personal Parameters */}
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold text-gray-700">Personal Parameters</h3>
+                {questions.map((question, index) => (
+                  <div key={index} className="bg-white/50 p-4 rounded-lg">
+                    <p className="font-medium text-gray-700">{question.question}</p>
+                    <p className="text-gray-600 mt-2">{question.options[answers[index] || 0]}</p>
+                  </div>
+                ))}
               </div>
-              
-              {/* JSON Results Section */}
-              <div className="mt-8 space-y-4">
-                <h3 className="text-xl font-semibold text-gray-700">Detailed Results</h3>
-                <div className="bg-gray-50 rounded-lg p-4 overflow-auto max-h-[400px]">
-                  <pre className="text-sm text-gray-700 whitespace-pre-wrap">
-                    {generateResultJSON()}
-                  </pre>
-                </div>
+
+              {/* Objective Parameters */}
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold text-gray-700">Objective Parameters</h3>
+                {objectiveParameters.map((param, index) => (
+                  <div key={index} className="bg-white/50 p-4 rounded-lg">
+                    <p className="font-medium text-gray-700">{param.parameter}</p>
+                    <p className="text-gray-600 mt-2">
+                      {objectiveAnswers[index] === '3' 
+                        ? customInputs[index] 
+                        : param.options[parseInt(objectiveAnswers[index] || '0')]}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Domain Parameters */}
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold text-gray-700">Domain Parameters</h3>
+                {domainQuestions.map((question, index) => (
+                  <div key={index} className="bg-white/50 p-4 rounded-lg">
+                    <p className="font-medium text-gray-700">{question.question}</p>
+                    <p className="text-gray-600 mt-2">{domainAnswers[index]}</p>
+                  </div>
+                ))}
               </div>
 
               <div className="flex justify-center pt-4">
@@ -297,7 +332,7 @@ export default function PP1() {
                   onClick={handleRetry}
                   className="bg-gradient-to-r from-primary to-accent-purple hover:from-primary/90 hover:to-accent-purple/90 text-white px-8 py-2 rounded-full transform transition-all hover:scale-105"
                 >
-                  Try Again
+                  Start Over
                 </Button>
               </div>
             </CardContent>

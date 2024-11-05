@@ -91,10 +91,17 @@ export default function LandingPage() {
                   size="lg" 
                   variant="default" 
                   className="bg-secondary hover:bg-secondary-foreground hover:scale-105 transition-transform text-white"
-                  onClick={() => router.push('/initialquiz')}
+                  onClick={() => {
+                    if (session?.user) {
+                      router.push('/initialquiz')
+                    } else {
+                      router.push('/login')
+                    }
+                  }}
                 >
                   Get Started
                 </Button>
+                
                 <Button 
                   size="lg" 
                   variant="outline" 
