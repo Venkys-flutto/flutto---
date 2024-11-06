@@ -151,485 +151,622 @@ const domainQuestions: DomainQuestion[] = [
   }
 ]
 
-export default function PP1() {
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [answers, setAnswers] = useState<(number | null)[]>(new Array(questions.length).fill(null))
-  const [objectiveAnswers, setObjectiveAnswers] = useState<(string | null)[]>(new Array(objectiveParameters.length).fill(null))
-  const [customInputs, setCustomInputs] = useState<string[]>(new Array(objectiveParameters.length).fill(''))
-  const [showResult, setShowResult] = useState(false)
-  //const [score, setScore] = useState(0)
-  const [showObjective, setShowObjective] = useState(false)
-  const [slideDirection, setSlideDirection] = useState<'right' | 'left'>('right')
-  const [currentObjective, setCurrentObjective] = useState(0)
-  const [showDomain, setShowDomain] = useState(false)
-  const [currentDomain, setCurrentDomain] = useState(0)
-  const [domainAnswers, setDomainAnswers] = useState<string[]>(new Array(domainQuestions.length).fill(''))
+// export default function PP1() {
+//   // Separate state arrays for each section with clear naming
+//   const [personalAnswers, setPersonalAnswers] = useState<(number | null)[]>(
+//     new Array(questions.length).fill(null)
+//   )
+//   const [objectiveAnswers, setObjectiveAnswers] = useState<(string | null)[]>(
+//     new Array(objectiveParameters.length).fill(null)
+//   )
+//   const [customInputs, setCustomInputs] = useState<string[]>(
+//     new Array(objectiveParameters.length).fill('')
+//   )
+//   const [domainAnswers, setDomainAnswers] = useState<string[]>(
+//     new Array(domainQuestions.length).fill('')
+//   )
 
-  const handleAnswerSelect = (value: string) => {
-    const newAnswers = [...answers]
-    newAnswers[currentQuestion] = parseInt(value)
-    setAnswers(newAnswers)
+//   // Section visibility states
+
+//   const [showObjective, setShowObjective] = useState(false)
+//   const [showDomain, setShowDomain] = useState(false)
+//   const [showResult, setShowResult] = useState(false)
+//   const [optionplaceholder, setOptionplaceholder] = useState('')
+
+//   // Handle PP answers
+//   const handlePersonalAnswerSelect = (questionIndex: number, value: string) => {
+//     const newAnswers = [...personalAnswers]
+//     newAnswers[questionIndex] = parseInt(value)
+//     setPersonalAnswers(newAnswers)
+    
+//   }
+//   // Handle OP answers
+//   const handleObjectiveSelect = (paramIndex: number, value: string) => {
+//     const newAnswers = [...objectiveAnswers]
+//     newAnswers[paramIndex] = value
+//     setObjectiveAnswers(newAnswers)// 
+
+//   }
+
+//   // Handle custom inputs
+//   const handleCustomInput = (paramIndex: number, value: string) => {
+//     const newInputs = [...customInputs]
+//     newInputs[paramIndex] = value
+//     setCustomInputs(newInputs)
+//     handleObjectiveSelect(paramIndex, '3')
+//   }
+
+//   // Handle domain answers
+//   const handleDomainAnswer = (index: number, value: string) => {
+//     const newAnswers = [...domainAnswers]
+//     newAnswers[index] = value
+//     setDomainAnswers(newAnswers)
+//   }
+
+//   // Handle final submission
+//   const handleSubmit = async () => {
+//     const results = {
+//       prompt: "You are a helpful assistant. Based on this parameters file, where Profile Parameters describe the personality of the learner, Domain parameters is the subject they want to learn, and objective parameters are the outcomes they expect, generate only a prompt, that can be used in other LLMs, fullfilling all criteria, on the subject mentioned in domain.",
+//       PersonalParameters: questions.map((question, index) => ({
+//         question: question.question,
+//         userAnswer: question.options[personalAnswers[index] || 0]
+//       })),
+//       ObjectiveParameters: objectiveParameters.map((param, index) => ({
+//         question: param.parameter,
+//         userAnswer: objectiveAnswers[index] === '3' ? 
+//           customInputs[index] : 
+//           param.options[parseInt(objectiveAnswers[index] || '0')]
+//       })),
+//       DomainParameters: domainQuestions.map((question, index) => ({
+//         question: question.question,
+//         answer: domainAnswers[index]
+//       }))
+//     }
+
+//     try {
+//       const response = await fetch('http://localhost:5500/datacollector', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify(results)
+//       });
+
+//       if (!response.ok) {
+//         throw new Error(`HTTP error! status: ${response.status}`);
+//       }
+
+//       const data = await response.json();
+//       console.log('Server response:', data);
+//       setShowResult(true);
+//     } catch (error) {
+//       console.error('Error sending data:', error);
+//       alert('Failed to submit quiz results. Please try again.');
+//     }
+//   }
+
+//   // Add a function to reset objective answers when moving to that section
+//   const handleMoveToObjective = () => {
+//     setObjectiveAnswers(new Array(objectiveParameters.length).fill(null))
+//     setCustomInputs(new Array(objectiveParameters.length).fill(''))
+//     setShowObjective(true)
+
+//   }
+
+//   // Add a function to reset domain answers when moving to that section
+//   const handleMoveToDomain = () => {
+//     setDomainAnswers(new Array(domainQuestions.length).fill(''))
+//     setShowDomain(true)
+//   }
+
+//   // Personal Parameters Section
+//   if (!showObjective && !showDomain) {
+//     return (
+//       <div className="min-h-screen p-4 bg-gradient-to-br from-primary via-accent-purple to-accent-pink">
+//         <div className="max-w-2xl mx-auto space-y-6">
+//           <Card className="w-full shadow-lg border border-white/20 bg-white/80 backdrop-blur-md">
+//             <CardHeader className="bg-gradient-to-r from-primary/10 to-accent-purple/10">
+//               <CardTitle className="text-2xl text-center text-primary">Personal Parameters</CardTitle>
+//             </CardHeader>
+//             <CardContent className="space-y-6 p-8">
+//               {questions.map((question, index) => (
+//                 <div key={question.id} className="space-y-4 p-6 bg-white/50 rounded-lg border border-white/20 backdrop-blur-sm">
+//                   <div className="flex items-center gap-2">
+//                     <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-semibold">
+//                       {index + 1}
+//                     </span>
+//                     <h3 className="text-lg font-medium text-gray-700">{question.question}</h3>
+//                   </div>
+//                   <RadioGroup
+//                     value={personalAnswers[index]?.toString()}
+//                     onValueChange={(value) => handlePersonalAnswerSelect(index, value)}
+//                     className="space-y-3 ml-10"
+//                   >
+//                     {question.options.map((option, optionIndex) => (
+//                       <div key={optionIndex} className="flex items-center space-x-2">
+//                         <RadioGroupItem
+//                           value={optionIndex.toString()}
+//                           id={`pp-question-${index}-option-${optionIndex}`}
+//                           className="border-2"
+//                         />
+//                         <Label
+//                           htmlFor={`pp-question-${index}-option-${optionIndex}`}
+//                           className="text-base cursor-pointer"
+//                         >
+//                           {option}
+//                         </Label>
+//                       </div>
+//                     ))}
+//                   </RadioGroup>
+//                 </div>
+//               ))}
+//               <div className="flex justify-end pt-6">
+//                 <Button
+//                   onClick={handleMoveToObjective}
+//                   disabled={personalAnswers.includes(null)}
+//                   className="bg-gradient-to-r from-primary to-accent-purple hover:from-primary/90 hover:to-accent-purple/90 text-white"
+//                 >
+//                   Next
+//                 </Button>
+//               </div>
+//             </CardContent>
+//           </Card>
+//         </div>
+//       </div>
+//     )
+//   }
+
+//   // Objective Parameters Section
+//   if (showObjective && !showDomain) {
+//     return (
+//       <div className="min-h-screen p-4 bg-gradient-to-br from-primary via-accent-purple to-accent-pink">
+//         <div className="max-w-2xl mx-auto space-y-6">
+//           <Card className="w-full shadow-lg border border-white/20 bg-white/80 backdrop-blur-md">
+//             <CardHeader className="bg-gradient-to-r from-primary/10 to-accent-purple/10">
+//               <CardTitle className="text-2xl text-center text-primary">Objective Parameters</CardTitle>
+//             </CardHeader>
+//             <CardContent className="space-y-6 p-8">
+//               {objectiveParameters.map((param, index) => (
+//                 <div key={param.id} className="space-y-4 p-6 bg-white/50 rounded-lg border border-white/20 backdrop-blur-sm">
+//                   <div className="flex items-center gap-2">
+//                     <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-semibold">
+//                       {index + 1}
+//                     </span>
+//                     <h3 className="text-lg font-medium text-gray-700">{param.parameter}</h3>
+//                   </div>
+//                   <RadioGroup
+//                     value={objectiveAnswers[index]?.toString()}
+//                     onValueChange={(value) => handleObjectiveSelect(index, value)}
+//                     className="space-y-3 ml-10"
+//                   >
+//                     {param.options.map((option, optionIndex) => (
+//                       <div key={optionIndex} className="flex items-center space-x-2">
+//                         <RadioGroupItem
+//                           value={optionIndex.toString()}
+//                           id={`op-param-${index}-option-${optionIndex}`}
+//                           className="border-2"
+//                         />
+//                         <Label
+//                           htmlFor={`op-param-${index}-option-${optionIndex}`}
+//                           className="text-base cursor-pointer"
+//                         >
+//                           {option}
+//                         </Label>
+//                       </div>
+//                     ))}
+//                     <div className="flex items-center space-x-2">
+//                       <RadioGroupItem
+//                         value="3"
+//                         id={`op-param-${index}-custom`}
+//                         className="border-2"
+//                       />
+//                       <Input
+//                         placeholder="Other (please specify)"
+//                         value={customInputs[index]}
+//                         onChange={(e) => handleCustomInput(index, e.target.value)}
+//                         className="flex-1"
+//                       />
+//                     </div>
+//                   </RadioGroup>
+//                 </div>
+//               ))}
+//               <div className="flex justify-between pt-6">
+//                 <Button
+//                   onClick={() => setShowObjective(false)}
+//                   variant="outline"
+//                 >
+//                   Previous
+//                 </Button>
+//                 <Button
+//                   onClick={handleMoveToDomain}
+//                   disabled={objectiveAnswers.includes(null)}
+//                   className="bg-gradient-to-r from-primary to-accent-purple hover:from-primary/90 hover:to-accent-purple/90 text-white"
+//                 >
+//                   Next
+//                 </Button>
+//               </div>
+//             </CardContent>
+//           </Card>
+//         </div>
+//       </div>
+//     )
+//   }
+
+//   // Domain Parameters Section
+//   if (showDomain) {
+//     return (
+//       <div className="min-h-screen p-4 bg-gradient-to-br from-primary via-accent-purple to-accent-pink">
+//         <div className="max-w-2xl mx-auto space-y-6">
+//           <Card className="w-full shadow-lg border border-white/20 bg-white/80 backdrop-blur-md">
+//             <CardHeader className="bg-gradient-to-r from-primary/10 to-accent-purple/10">
+//               <CardTitle className="text-2xl text-center text-primary">Domain Parameters</CardTitle>
+//             </CardHeader>
+//             <CardContent className="space-y-6 p-8">
+//               {domainQuestions.map((question, index) => (
+//                 <div key={question.id} className="space-y-4 p-6 bg-white/50 rounded-lg border border-white/20 backdrop-blur-sm">
+//                   <div className="flex items-center gap-2">
+//                     <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-semibold">
+//                       {index + 1}
+//                     </span>
+//                     <h3 className="text-lg font-medium text-gray-700">{question.question}</h3>
+//                   </div>
+//                   <div className="ml-10">
+//                     <Input
+//                       value={domainAnswers[index]}
+//                       onChange={(e) => handleDomainAnswer(index, e.target.value)}
+//                       placeholder="Enter your answer"
+//                       className="w-full"
+//                     />
+//                   </div>
+//                 </div>
+//               ))}
+//               <div className="flex justify-between pt-6">
+//                 <Button
+//                   onClick={() => setShowDomain(false)}
+//                   variant="outline"
+//                 >
+//                   Previous
+//                 </Button>
+//                 <Button
+//                   onClick={handleSubmit}
+//                   disabled={domainAnswers.includes('')}
+//                   className="bg-gradient-to-r from-primary to-accent-purple hover:from-primary/90 hover:to-accent-purple/90 text-white"
+//                 >
+//                   Submit
+//                 </Button>
+//               </div>
+//             </CardContent>
+//           </Card>
+//         </div>
+//       </div>
+//     )
+//   }
+
+//   // Results Section
+//   return (
+//     <div className="min-h-screen p-4 bg-gradient-to-br from-primary via-accent-purple to-accent-pink">
+//       <div className="max-w-2xl mx-auto">
+//         <Card className="w-full shadow-lg border border-white/20 bg-white/80 backdrop-blur-md">
+//           <CardHeader className="bg-gradient-to-r from-primary/10 to-accent-purple/10">
+//             <CardTitle className="text-2xl text-center text-primary">Submission Successful</CardTitle>
+//           </CardHeader>
+//           <CardContent className="p-8 text-center">
+//             <p className="text-lg text-gray-700 mb-6">Your responses have been submitted successfully.</p>
+//             <Button
+//               onClick={() => window.location.reload()}
+//               className="bg-gradient-to-r from-primary to-accent-purple hover:from-primary/90 hover:to-accent-purple/90 text-white"
+//             >
+//               Start Over
+//             </Button>
+//           </CardContent>
+//         </Card>
+//       </div>
+//     </div>
+//   )
+// }
+export default function PP1() {
+  // Separate state arrays for each section with clear naming
+  const [personalAnswers, setPersonalAnswers] = useState<(number | null)[]>(
+    new Array(questions.length).fill(null)
+  )
+  const [objectiveAnswers, setObjectiveAnswers] = useState<(string | null)[]>(
+    new Array(objectiveParameters.length).fill(null)
+  )
+  const [customInputs, setCustomInputs] = useState<string[]>(
+    new Array(objectiveParameters.length).fill('')
+  )
+  const [domainAnswers, setDomainAnswers] = useState<string[]>(
+    new Array(domainQuestions.length).fill('')
+  )
+
+  // Section visibility states
+  const [showObjective, setShowObjective] = useState(false)
+  const [showDomain, setShowDomain] = useState(false)
+  const [showResult, setShowResult] = useState(false)
+
+  // Handle PP answers
+  const handlePersonalAnswerSelect = (questionIndex: number, value: string) => {
+    const newAnswers = [...personalAnswers]
+    newAnswers[questionIndex] = parseInt(value)
+    setPersonalAnswers(newAnswers)
   }
 
+  // Handle OP answers
   const handleObjectiveSelect = (paramIndex: number, value: string) => {
     const newAnswers = [...objectiveAnswers]
     newAnswers[paramIndex] = value
     setObjectiveAnswers(newAnswers)
   }
 
+  // Handle custom inputs
   const handleCustomInput = (paramIndex: number, value: string) => {
     const newInputs = [...customInputs]
     newInputs[paramIndex] = value
     setCustomInputs(newInputs)
-    
-    // Automatically select the custom input option
-    handleObjectiveSelect(paramIndex, '3') // Index for custom input
+    handleObjectiveSelect(paramIndex, '3')
   }
 
-  const handleNext = () => {
-    if (currentQuestion < questions.length - 1) {
-      setSlideDirection('right')
-      setCurrentQuestion(currentQuestion + 1)
-    } else if (!showObjective) {
-      setShowObjective(true)
-    }
+  // Handle domain answers
+  const handleDomainAnswer = (index: number, value: string) => {
+    const newAnswers = [...domainAnswers]
+    newAnswers[index] = value
+    setDomainAnswers(newAnswers)
   }
 
-  const handlePrevious = () => {
-    if (currentQuestion > 0) {
-      setSlideDirection('left')
-      setCurrentQuestion(currentQuestion - 1)
-    }
-  }
-
-  // const handleObjectiveNext = () => {
-  //   if (currentObjective < objectiveParameters.length - 1) {
-  //     setSlideDirection('right')
-  //     setCurrentObjective(currentObjective + 1)
-  //   } else if (!showDomain) {
-  //     setShowDomain(true)
-  //   }
-  // }
-
+  // Handle final submission
   const handleSubmit = async () => {
-    // Only execute final submission when in domain questions and at the last question
-    if (showDomain && currentDomain === domainQuestions.length - 1) {
-      const results = {
-        prompt: "You are a helpful assistant. Based on this parameters file, where Profile Parameters describe the personality of the learner, Domain parameters is the subject they want to learn, and objective parameters are the outcomes they expect, generate only a prompt, that can be used in other LLMs, fullfilling all criteria, on the subject mentioned in domain.",
-        PersonalParameters: questions.map((question, index) => ({
-          question: question.question,
-          userAnswer: question.options[answers[index] || 0]
-        })),
-        ObjectiveParameters: objectiveParameters.map((param, index) => ({
-          question: param.parameter,
-          userAnswer: objectiveAnswers[index] === '3' ? 
-            customInputs[index] : 
-            param.options[parseInt(objectiveAnswers[index] || '0')]
-        })),
-        DomainParameters: domainQuestions.map((question, index) => ({
-          question: question.question,
-          userAnswer: domainAnswers[index]
-        }))
-      }
-
-      try {
-        // Send data to the endpoint
-        const response = await fetch('/api/datacollector', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',// for the server to know what type of data is being sent
-          },
-          body: JSON.stringify(results)
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('Server response:', data);
-
-        setShowResult(true)
-      } catch (error) {
-        console.error('Error sending data:', error);
-        // You might want to show an error message to the user
-        alert('Failed to submit quiz results. Please try again.');
-      }
-    }
-  }
-
-  const handleRetry = () => {
-    setCurrentQuestion(0)
-    setAnswers(new Array(questions.length).fill(null))
-    setShowResult(false)
-    //setScore(0)
-  }
-
-  const generateResultJSON = () => {
     const results = {
-      prompt: "You are a helpful assistant. Based on this parameters file, where Profile Parameters describe the personality of the learner, Domain parameters is the subject they want to learn, and objective parameters are the outcomes they expect, generate only a prompt, that can be used in other LLMs, fullfilling all criteria, on the subject mentioned in domain.",
-      questions: questions.map((question, index) => ({
+      prompt: "You are a helpful assistant. Based on this parameters file, where Profile Parameters describe the personality of the learner, Domain parameters is the subject they want to learn, and objective parameters are the outcomes they expect, generate only a prompt, that can be used in other LLMs, fulfilling all criteria, on the subject mentioned in domain.",
+      PersonalParameters: questions.map((question, index) => ({
         question: question.question,
-        userAnswer: question.options[answers[index] || 0]
+        userAnswer: question.options[personalAnswers[index] || 0]
+      })),
+      ObjectiveParameters: objectiveParameters.map((param, index) => ({
+        question: param.parameter,
+        userAnswer: objectiveAnswers[index] === '3' ? 
+          customInputs[index] : 
+          param.options[parseInt(objectiveAnswers[index] || '0')]
+      })),
+      DomainParameters: domainQuestions.map((question, index) => ({
+        question: question.question,
+        answer: domainAnswers[index]
       }))
     }
-    return JSON.stringify(results, null, 2)
+
+    try {
+      const response = await fetch('http://62.72.30.10:5500/datacollector', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(results)
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Server response:', data);
+      setShowResult(true);
+    } catch (error) {
+      console.error('Error sending data:', error);
+      alert('Failed to submit quiz results. Please try again.');
+    }
   }
 
-  if (showResult) {
+  // Navigation functions without resetting
+  const handleMoveToObjective = () => {
+    setShowObjective(true)
+    setShowDomain(false)
+  }
+
+  const handleMoveToDomain = () => {
+    setShowDomain(true)
+    setShowObjective(false)
+  }
+
+  // Personal Parameters Section
+  if (!showObjective && !showDomain) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-primary via-accent-purple to-accent-pink">
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="w-full max-w-2xl"
-        >
+      <div className="min-h-screen p-4 bg-gradient-to-br from-primary via-accent-purple to-accent-pink">
+        <div className="max-w-2xl mx-auto space-y-6">
           <Card className="w-full shadow-lg border border-white/20 bg-white/80 backdrop-blur-md">
             <CardHeader className="bg-gradient-to-r from-primary/10 to-accent-purple/10">
-              <CardTitle className="text-3xl text-center text-primary">Parameters Collected</CardTitle>
+              <CardTitle className="text-2xl text-center text-primary">Personal Parameters</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6 p-8">
-              {/* Personal Parameters */}
-              <div className="space-y-4">
-                <h3 className="text-xl font-semibold text-gray-700">Personal Parameters</h3>
-                {questions.map((question, index) => (
-                  <div key={index} className="bg-white/50 p-4 rounded-lg">
-                    <p className="font-medium text-gray-700">{question.question}</p>
-                    <p className="text-gray-600 mt-2">{question.options[answers[index] || 0]}</p>
+              {questions.map((question, index) => (
+                <div key={question.id} className="space-y-4 p-6 bg-white/50 rounded-lg border border-white/20 backdrop-blur-sm">
+                  <div className="flex items-center gap-2">
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-semibold">
+                      {index + 1}
+                    </span>
+                    <h3 className="text-lg font-medium text-gray-700">{question.question}</h3>
                   </div>
-                ))}
-              </div>
-
-              {/* Objective Parameters */}
-              <div className="space-y-4">
-                <h3 className="text-xl font-semibold text-gray-700">Objective Parameters</h3>
-                {objectiveParameters.map((param, index) => (
-                  <div key={index} className="bg-white/50 p-4 rounded-lg">
-                    <p className="font-medium text-gray-700">{param.parameter}</p>
-                    <p className="text-gray-600 mt-2">
-                      {objectiveAnswers[index] === '3' 
-                        ? customInputs[index] 
-                        : param.options[parseInt(objectiveAnswers[index] || '0')]}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Domain Parameters */}
-              <div className="space-y-4">
-                <h3 className="text-xl font-semibold text-gray-700">Domain Parameters</h3>
-                {domainQuestions.map((question, index) => (
-                  <div key={index} className="bg-white/50 p-4 rounded-lg">
-                    <p className="font-medium text-gray-700">{question.question}</p>
-                    <p className="text-gray-600 mt-2">{domainAnswers[index]}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex justify-center pt-4">
-                <Button 
-                  onClick={handleRetry}
-                  className="bg-gradient-to-r from-primary to-accent-purple hover:from-primary/90 hover:to-accent-purple/90 text-white px-8 py-2 rounded-full transform transition-all hover:scale-105"
+                  <RadioGroup
+                    value={personalAnswers[index] !== null ? personalAnswers[index]?.toString() : ""}
+                    onValueChange={(value) => handlePersonalAnswerSelect(index, value)}
+                    className="space-y-3 ml-10"
+                  >
+                    {question.options.map((option, optionIndex) => (
+                      <div key={optionIndex} className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value={optionIndex.toString()}
+                          id={`pp-question-${index}-option-${optionIndex}`}
+                          className="border-2"
+                        />
+                        <Label
+                          htmlFor={`pp-question-${index}-option-${optionIndex}`}
+                          className="text-base cursor-pointer"
+                        >
+                          {option}
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </div>
+              ))}
+              <div className="flex justify-end pt-6">
+                <Button
+                  onClick={handleMoveToObjective}
+                  disabled={personalAnswers.includes(null)}
+                  className="bg-gradient-to-r from-primary to-accent-purple hover:from-primary/90 hover:to-accent-purple/90 text-white"
                 >
-                  Start Over
+                  Next
                 </Button>
               </div>
             </CardContent>
           </Card>
-        </motion.div>
-      </div>
-    )
-  }
-
-  if (showObjective) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-primary via-accent-purple to-accent-pink">
-        <div className="w-full max-w-2xl">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentObjective}
-              initial={{ x: slideDirection === 'right' ? 100 : -100, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: slideDirection === 'right' ? -100 : 100, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Card className="w-full shadow-lg border border-white/20 bg-white/80 backdrop-blur-md">
-                <CardHeader className="bg-gradient-to-r from-primary/10 to-accent-purple/10">
-                  <CardTitle className="text-xl flex justify-between items-center">
-                    <span className="text-gray-800">Objective Parameter {currentObjective + 1}</span>
-                    <span className="text-sm font-medium bg-white/80 px-3 py-1 rounded-full text-gray-600">
-                      {currentObjective + 1} of {objectiveParameters.length}
-                    </span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6 p-8">
-                  <div className="text-lg font-medium text-gray-700">
-                    {objectiveParameters[currentObjective].parameter}
-                  </div>
-                  
-                  <RadioGroup
-                    value={objectiveAnswers[currentObjective] || undefined}
-                    onValueChange={(value) => handleObjectiveSelect(currentObjective, value)}
-                    className="space-y-3"
-                  >
-                    {objectiveParameters[currentObjective].options.map((option, index) => (
-                      <motion.div 
-                        key={index}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="transform transition-all duration-200 hover:scale-[1.01]"
-                      >
-                        <Label
-                          htmlFor={`param-${currentObjective}-option-${index}`}
-                          className="flex items-center p-4 rounded-lg border-2 border-purple-100 hover:border-purple-300 cursor-pointer bg-white hover:bg-purple-50 transition-all"
-                        >
-                          <RadioGroupItem
-                            value={index.toString()}
-                            id={`param-${currentObjective}-option-${index}`}
-                            className="border-2 border-purple-300"
-                          />
-                          <span className="ml-3 text-gray-700">{option}</span>
-                        </Label>
-                      </motion.div>
-                    ))}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3 }}
-                      className="transform transition-all duration-200 hover:scale-[1.01]"
-                    >
-                      <div className="flex items-center p-4 rounded-lg border-2 border-purple-100 hover:border-purple-300 bg-white hover:bg-purple-50 transition-all">
-                        <RadioGroupItem
-                          value="3"
-                          id={`param-${currentObjective}-custom`}
-                          className="border-2 border-purple-300"
-                        />
-                        <Input
-                          placeholder="Other (please specify)"
-                          value={customInputs[currentObjective]}
-                          onChange={(e) => handleCustomInput(currentObjective, e.target.value)}
-                          className="ml-3 flex-1"
-                        />
-                      </div>
-                    </motion.div>
-                  </RadioGroup>
-
-                  <div className="flex justify-between pt-6">
-                    <Button
-                      onClick={() => {
-                        if (currentObjective > 0) {
-                          setSlideDirection('left')
-                          setCurrentObjective(currentObjective - 1)
-                        } else {
-                          setShowObjective(false)
-                          setSlideDirection('left')
-                        }
-                      }}
-                      variant="outline"
-                      className="px-6 py-2 rounded-full hover:bg-purple-50 transition-all"
-                    >
-                      {currentObjective === 0 ? 'Back to Questions' : 'Previous'}
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        if (currentObjective < objectiveParameters.length - 1) {
-                          setSlideDirection('right')
-                          setCurrentObjective(currentObjective + 1)
-                        } else {
-                          setShowDomain(true)
-                          setShowObjective(false)
-                          setSlideDirection('right')
-                        }
-                      }}
-                      disabled={objectiveAnswers[currentObjective] === null}
-                      className="bg-gradient-to-r from-primary to-accent-purple hover:from-primary/90 hover:to-accent-purple/90 text-white px-6 py-2 rounded-full transform transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
-                    >
-                      {currentObjective === objectiveParameters.length - 1 ? 'Next' : 'Next'}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Progress bar */}
-          <div className="mt-4 bg-white/30 backdrop-blur-sm rounded-full h-2 p-[2px]">
-            <div 
-              className="h-full bg-gradient-to-r from-primary to-accent-purple rounded-full transition-all duration-300"
-              style={{ width: `${((currentObjective + 1) / objectiveParameters.length) * 100}%` }}
-            />
-          </div>
         </div>
       </div>
     )
   }
 
+  // Objective Parameters Section
+  if (showObjective && !showDomain) {
+    return (
+      <div className="min-h-screen p-4 bg-gradient-to-br from-primary via-accent-purple to-accent-pink">
+        <div className="max-w-2xl mx-auto space-y-6">
+          <Card className="w-full shadow-lg border border-white/20 bg-white/80 backdrop-blur-md">
+            <CardHeader className="bg-gradient-to-r from-primary/10 to-accent-purple/10">
+              <CardTitle className="text-2xl text-center text-primary">Objective Parameters</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6 p-8">
+              {objectiveParameters.map((param, index) => (
+                <div key={param.id} className="space-y-4 p-6 bg-white/50 rounded-lg border border-white/20 backdrop-blur-sm">
+                  <div className="flex items-center gap-2">
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-semibold">
+                      {index + 1}
+                    </span>
+                    <h3 className="text-lg font-medium text-gray-700">{param.parameter}</h3>
+                  </div>
+                  <RadioGroup
+                    value={objectiveAnswers[index] || ""}
+                    onValueChange={(value) => handleObjectiveSelect(index, value)}
+                    className="space-y-3 ml-10"
+                  >
+                    {param.options.map((option, optionIndex) => (
+                      <div key={optionIndex} className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value={optionIndex.toString()}
+                          id={`op-param-${index}-option-${optionIndex}`}
+                          className="border-2"
+                        />
+                        <Label
+                          htmlFor={`op-param-${index}-option-${optionIndex}`}
+                          className="text-base cursor-pointer"
+                        >
+                          {option}
+                        </Label>
+                      </div>
+                    ))}
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem
+                        value="3"
+                        id={`op-param-${index}-custom`}
+                        className="border-2"
+                      />
+                      <Input
+                        placeholder="Other (please specify)"
+                        value={customInputs[index]}
+                        onChange={(e) => handleCustomInput(index, e.target.value)}
+                        className="flex-1"
+                      />
+                    </div>
+                  </RadioGroup>
+                </div>
+              ))}
+              <div className="flex justify-between pt-6">
+                <Button
+                  onClick={() => setShowObjective(false)}
+                  variant="outline"
+                >
+                  Previous
+                </Button>
+                <Button
+                  onClick={handleMoveToDomain}
+                  disabled={objectiveAnswers.includes(null)}
+                  className="bg-gradient-to-r from-primary to-accent-purple hover:from-primary/90 hover:to-accent-purple/90 text-white"
+                >
+                  Next
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
+  // Domain Parameters Section
   if (showDomain) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-primary via-accent-purple to-accent-pink">
-        <div className="w-full max-w-2xl">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentDomain}
-              initial={{ x: slideDirection === 'right' ? 100 : -100, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: slideDirection === 'right' ? -100 : 100, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Card className="w-full shadow-lg border border-white/20 bg-white/80 backdrop-blur-md">
-                <CardHeader className="bg-gradient-to-r from-primary/10 to-accent-purple/10">
-                  <CardTitle className="text-xl flex justify-between items-center">
-                    <span className="text-gray-800">Domain Question {currentDomain + 1}</span>
-                    <span className="text-sm font-medium bg-white/80 px-3 py-1 rounded-full text-gray-600">
-                      {currentDomain + 1} of {domainQuestions.length}
+      <div className="min-h-screen p-4 bg-gradient-to-br from-primary via-accent-purple to-accent-pink">
+        <div className="max-w-2xl mx-auto space-y-6">
+          <Card className="w-full shadow-lg border border-white/20 bg-white/80 backdrop-blur-md">
+            <CardHeader className="bg-gradient-to-r from-primary/10 to-accent-purple/10">
+              <CardTitle className="text-2xl text-center text-primary">Domain Parameters</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6 p-8">
+              {domainQuestions.map((question, index) => (
+                <div key={question.id} className="space-y-4 p-6 bg-white/50 rounded-lg border border-white/20 backdrop-blur-sm">
+                  <div className="flex items-center gap-2">
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-semibold">
+                      {index + 1}
                     </span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6 p-8">
-                  <div className="text-lg font-medium text-gray-700">
-                    {domainQuestions[currentDomain].question}
+                    <h3 className="text-lg font-medium text-gray-700">{question.question}</h3>
                   </div>
-                  
-                  <Input
-                    value={domainAnswers[currentDomain]}
-                    onChange={(e) => {
-                      const newAnswers = [...domainAnswers]
-                      newAnswers[currentDomain] = e.target.value
-                      setDomainAnswers(newAnswers)
-                    }}
-                    placeholder="Enter your answer here..."
-                    className="w-full p-4 border-2 border-purple-100 focus:border-purple-300 rounded-lg"
-                  />
-
-                  <div className="flex justify-between pt-6">
-                    <Button
-                      onClick={() => {
-                        if (currentDomain > 0) {
-                          setSlideDirection('left')
-                          setCurrentDomain(currentDomain - 1)
-                        }
-                      }}
-                      variant="outline"
-                      className="px-6 py-2 rounded-full hover:bg-purple-50 transition-all"
-                    >
-                      Previous
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        if (currentDomain < domainQuestions.length - 1) {
-                          setSlideDirection('right')
-                          setCurrentDomain(currentDomain + 1)
-                        } else {
-                          handleSubmit()
-                        }
-                      }}
-                      disabled={!domainAnswers[currentDomain]}
-                      className="bg-gradient-to-r from-primary to-accent-purple hover:from-primary/90 hover:to-accent-purple/90 text-white px-6 py-2 rounded-full transform transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
-                    >
-                      {currentDomain === domainQuestions.length - 1 ? 'Submit' : 'Next'}
-                    </Button>
+                  <div className="ml-10">
+                    <Input
+                      value={domainAnswers[index]}
+                      onChange={(e) => handleDomainAnswer(index, e.target.value)}
+                      placeholder="Enter your answer"
+                      className="w-full"
+                    />
                   </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Progress bar */}
-          <div className="mt-4 bg-white/30 backdrop-blur-sm rounded-full h-2 p-[2px]">
-            <div 
-              className="h-full bg-gradient-to-r from-primary to-accent-purple rounded-full transition-all duration-300"
-              style={{ width: `${((currentDomain + 1) / domainQuestions.length) * 100}%` }}
-            />
-          </div>
+                </div>
+              ))}
+              <div className="flex justify-between pt-6">
+                <Button
+                  onClick={() => setShowDomain(false)}
+                  variant="outline"
+                >
+                  Previous
+                </Button>
+                <Button
+                  onClick={handleSubmit}
+                  disabled={domainAnswers.includes('')}
+                  className="bg-gradient-to-r from-primary to-accent-purple hover:from-primary/90 hover:to-accent-purple/90 text-white"
+                >
+                  Submit
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     )
   }
 
+  // Results Section
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-primary via-accent-purple to-accent-pink">
-      <div className="w-full max-w-2xl">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentQuestion}
-            initial={{ x: slideDirection === 'right' ? 100 : -100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: slideDirection === 'right' ? -100 : 100, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Card className="w-full shadow-lg border border-white/20 bg-white/80 backdrop-blur-md">
-              <CardHeader className="bg-gradient-to-r from-primary/10 to-accent-purple/10">
-                <CardTitle className="text-xl flex justify-between items-center">
-                  <span className="text-gray-800">Question {currentQuestion + 1}</span>
-                  <span className="text-sm font-medium bg-white/80 px-3 py-1 rounded-full text-gray-600">
-                    {currentQuestion + 1} of {questions.length}
-                  </span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6 p-8">
-                <div className="text-lg font-medium text-gray-700">
-                  {questions[currentQuestion].question}
-                </div>
-                
-                <RadioGroup
-                  value={answers[currentQuestion]?.toString()}
-                  onValueChange={handleAnswerSelect}
-                  className="space-y-3"
-                >
-                  {questions[currentQuestion].options.map((option, index) => (
-                    <motion.div 
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="transform transition-all duration-200 hover:scale-[1.01]"
-                    >
-                      <Label
-                        htmlFor={`option-${index}`}
-                        className="flex items-center p-4 rounded-lg border-2 border-purple-100 hover:border-purple-300 cursor-pointer bg-white hover:bg-purple-50 transition-all"
-                      >
-                        <RadioGroupItem
-                          value={index.toString()}
-                          id={`option-${index}`}
-                          className="border-2 border-purple-300"
-                        />
-                        <span className="ml-3 text-gray-700">{option}</span>
-                      </Label>
-                    </motion.div>
-                  ))}
-                </RadioGroup>
-
-                <div className="flex justify-between pt-6">
-                  <Button
-                    onClick={handlePrevious}
-                    disabled={currentQuestion === 0}
-                    variant="outline"
-                    className="px-6 py-2 rounded-full hover:bg-purple-50 transition-all"
-                  >
-                    Previous
-                  </Button>
-                  <Button
-                    onClick={handleNext}
-                    disabled={answers[currentQuestion] === null}
-                    className="bg-gradient-to-r from-primary to-accent-purple hover:from-primary/90 hover:to-accent-purple/90 text-white px-6 py-2 rounded-full transform transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
-                  >
-                    {currentQuestion === questions.length - 1 ? 'Submit' : 'Next'}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Progress bar */}
-        <div className="mt-4 bg-white/30 backdrop-blur-sm rounded-full h-2 p-[2px]">
-          <div 
-            className="h-full bg-gradient-to-r from-primary to-accent-purple rounded-full transition-all duration-300"
-            style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
-          />
-        </div>
+    <div className="min-h-screen p-4 bg-gradient-to-br from-primary via-accent-purple to-accent-pink">
+      <div className="max-w-2xl mx-auto">
+        <Card className="w-full shadow-lg border border-white/20 bg-white/80 backdrop-blur-md">
+          <CardHeader className="bg-gradient-to-r from-primary/10 to-accent-purple/10">
+            <CardTitle className="text-2xl text-center text-primary">Submission Successful</CardTitle>
+          </CardHeader>
+          <CardContent className="p-8 text-center">
+            <p className="text-lg text-gray-700 mb-6">Your responses have been submitted successfully.</p>
+            <Button
+              onClick={() => window.location.reload()}
+              className="bg-gradient-to-r from-primary to-accent-purple hover:from-primary/90 hover:to-accent-purple/90 text-white"
+            >
+              Start Over
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
