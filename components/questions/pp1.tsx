@@ -534,7 +534,7 @@ export default function PP1() {
     }
 
     try {
-      const response = await fetch('http://62.72.30.10:5500/datacollector', {
+      const response = await fetch('/api/datacollector', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
