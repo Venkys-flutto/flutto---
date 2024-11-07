@@ -178,7 +178,7 @@ const domainQuestions: DomainQuestion[] = [
 //     const newAnswers = [...personalAnswers]
 //     newAnswers[questionIndex] = parseInt(value)
 //     setPersonalAnswers(newAnswers)
-    
+
 //   }
 //   // Handle OP answers
 //   const handleObjectiveSelect = (paramIndex: number, value: string) => {
@@ -522,21 +522,21 @@ export default function PP1() {
           id: `PP${index + 1}`,
           value: questions[index].options[personalAnswers[index] || 0]
         })),
+        Objective_Parameters: objectiveParameters.map((_, index) => ({
+          id: `OP${index + 1}`,
+          value: objectiveAnswers[index] === '3' ?
+            customInputs[index] :
+            objectiveParameters[index].options[parseInt(objectiveAnswers[index] || '0')]
+        })),
         Domain_Parameters: domainQuestions.map((_, index) => ({
           id: `DP${index + 1}`,
           value: domainAnswers[index]
-        })),
-        Objective_Parameters: objectiveParameters.map((_, index) => ({
-          id: `OP${index + 1}`,
-          value: objectiveAnswers[index] === '3' ? 
-            customInputs[index] : 
-            objectiveParameters[index].options[parseInt(objectiveAnswers[index] || '0')]
-        }))
+        })) 
       }
     }
 
     try {
-      const response = await fetch('https://62.72.30.10:5500/datacollector', {
+      const response = await fetch('http://62.72.30.10:5500/datacollector', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -548,12 +548,18 @@ export default function PP1() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
-      console.log('Server response:', data);
-      setShowResult(true);
+      // Get the response from backend
+      const responseData = await response.json()
+      
+      // Store the response in sessionStorage
+      sessionStorage.setItem('quizResponse', JSON.stringify(responseData))
+      
+      // Redirect to results page
+      window.location.href = '/quiz-results'
+      
     } catch (error) {
       console.error('Error sending data:', error);
-      alert('sent to server');
+      alert('Failed to submit quiz results. Please try again.');
     }
 
     // Download the parameters file
