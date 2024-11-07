@@ -18,12 +18,22 @@ export async function POST(request: Request) {
 
     //display the data received
     // Format the parameters for display
+
     const formattedData = {
+      prompt: data.prompt,
+      PersonalParameters: data.PersonalParameters.map(param => ({
+        question: param.question,
+        answer: param.userAnswer
+      })),
       DomainParameters: data.DomainParameters.map(param => ({
         question: param.question,
         answer: param.userAnswer
+      })),
+      ObjectiveParameters: data.ObjectiveParameters.map(param => ({
+        question: param.question,
+        answer: param.userAnswer
       }))
-    }
+    } 
 
     return NextResponse.json(formattedData, { status: 200 })
   } catch (error) {
