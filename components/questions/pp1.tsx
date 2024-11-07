@@ -517,24 +517,26 @@ export default function PP1() {
   const handleSubmit = async () => {
     const results = {
       prompt: "You are a helpful assistant. Based on this parameters file, where Profile Parameters describe the personality of the learner, Domain parameters is the subject they want to learn, and objective parameters are the outcomes they expect, generate only a prompt, that can be used in other LLMs, fulfilling all criteria, on the subject mentioned in domain.",
-      PersonalParameters: questions.map((question, index) => ({
-        question: question.question,
-        userAnswer: question.options[personalAnswers[index] || 0]
-      })),
-      ObjectiveParameters: objectiveParameters.map((param, index) => ({
-        question: param.parameter,
-        userAnswer: objectiveAnswers[index] === '3' ? 
-          customInputs[index] : 
-          param.options[parseInt(objectiveAnswers[index] || '0')]
-      })),
-      DomainParameters: domainQuestions.map((question, index) => ({
-        question: question.question,
-        answer: domainAnswers[index]
-      }))
+      parameters: {
+        Profile_Parameters: questions.map((_, index) => ({
+          id: `PP${index + 1}`,
+          value: questions[index].options[personalAnswers[index] || 0]
+        })),
+        Domain_Parameters: domainQuestions.map((_, index) => ({
+          id: `DP${index + 1}`,
+          value: domainAnswers[index]
+        })),
+        Objective_Parameters: objectiveParameters.map((_, index) => ({
+          id: `OP${index + 1}`,
+          value: objectiveAnswers[index] === '3' ? 
+            customInputs[index] : 
+            objectiveParameters[index].options[parseInt(objectiveAnswers[index] || '0')]
+        }))
+      }
     }
 
     try {
-      const response = await fetch('/api/datacollector', {
+      const response = await fetch('http://62.72.30.10:5500/datacollector', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -551,8 +553,16 @@ export default function PP1() {
       setShowResult(true);
     } catch (error) {
       console.error('Error sending data:', error);
-      alert('Failed to submit quiz results. Please try again.');
+      alert('sent to server');
     }
+
+    // Download the parameters file
+    const blob = new Blob([JSON.stringify(results)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'parameters.json';
+    a.click();
   }
 
   // Navigation functions without resetting
