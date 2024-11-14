@@ -12,6 +12,8 @@ import { useSession } from 'next-auth/react'
 import { ProfileMenu } from "@/components/ui/profile-menu"
 import { useRouter } from 'next/navigation'
 
+
+
 export default function LandingPage() {
   const { data: session } = useSession()
   const [showMobileMenu, setShowMobileMenu] = useState(false)
@@ -50,7 +52,7 @@ export default function LandingPage() {
         </Button>
       </header>
       {showMobileMenu && (
-        <nav className="md:hidden absolute right-0 top-14 w-64 bg-white/80 backdrop-blur-md shadow-lg border-l border-b border-gray-100 z-50">
+        <nav className="md:hidden absolute right-0 top-14 w-64 bg-black backdrop-blur-md shadow-lg border-l border-b border-gray-100 z-50">
           <div className="p-4 space-y-2 flex flex-col items-end">
             <Link className="block text-sm font-medium hover:underline underline-offset-4" href="#features">
               Features
@@ -76,9 +78,8 @@ export default function LandingPage() {
       <main className="flex-1 min-h-screen">
         <section className="w-full py-8 md:py-16 lg:py-24 xl:py-32 bg-gradient-to-br from-primary via-accent-purple to-accent-pink">
           <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center space-y-4 text-center">
+            <div className="flex flex-col items-center space-y-4 text-center ">
               <div className="space-y-2">
-                
                 <h1 className="text-2xl font-bold tracking-tighter sm:text-3xl md:text-4xl lg:text-5xl/none bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-100 animate-fade-in px-4 md:px-[100px]">
                   Revolutionize Your Business Operations with AI
                 </h1>
@@ -102,14 +103,14 @@ export default function LandingPage() {
                   Get Started
                 </Button>
                 
-                <Button 
+                {/* <Button 
                   size="lg" 
                   variant="outline" 
                   className="bg-white/10 backdrop-blur-sm text-white border-white/20 hover:bg-white/20 hover:scale-105 transition-transform"
                   onClick={() => router.push('/login')}
                 >
                   Learn More
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>
@@ -307,16 +308,16 @@ export default function LandingPage() {
               <div className="w-full max-w-sm space-y-2 px-4">
                 <form className="flex flex-col space-y-4">
                   <Input 
-                    className="max-w-lg flex-1 transition-all duration-300 focus:ring-2 focus:ring-primary/50 hover:border-primary/50 bg-white/80 backdrop-blur-sm" 
+                    className="max-w-lg flex-1 transition-all duration-300 focus:ring-2 focus:ring-primary/50 hover:border-primary/50 bg-black/80 backdrop-blur-sm" 
                     placeholder="Your name" 
                     type="text" 
                   />
                   <Input 
-                    className="max-w-lg flex-1 transition-all duration-300 focus:ring-2 focus:ring-primary/50 hover:border-primary/50 bg-white/80 backdrop-blur-sm" 
+                    className="max-w-lg flex-1 transition-all duration-300 focus:ring-2 focus:ring-primary/50 hover:border-primary/50 bg-black/80 backdrop-blur-sm" 
                     placeholder="Your email" 
                     type="email" 
                   />
-                  <Button type="submit" className="w-full">Request Demo</Button>
+                  <Button onClick={() => window.open("mailto:contact@flutto.ai", '_blank')} type="submit" className="w-full">Request Demo</Button>
                 </form>
               </div>
             </div>

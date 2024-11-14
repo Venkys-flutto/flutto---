@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   try {
     // Parse request body
     const body = await req.json()
-    console.log('Login API - Received body:', body)
+    console.log('Login attempt for:', body.email)
 
     // Validate entire body at once instead of separately
     const validatedData = loginSchema.parse(body)
@@ -60,24 +60,27 @@ export async function POST(req: Request) {
     }
     
     console.log('Login API - Sending response:', userWithoutPassword)
-    return NextResponse.json({
-      user: userWithoutPassword,
-      message: "Login successful"
-    })
+    return new NextResponse(
+      JSON.stringify({
+        user: userWithoutPassword,
+        message: "Login successful"
+      }),
+      { 
+        status: 200, 
+        headers: { 'Content-Type': 'application/json' } 
+      }
+    )
 
   } catch (error) {
     console.error("Login error:", error)
-
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.errors[0].message },
-        { status: 400 }
-      )
-    }
-
-    return NextResponse.json(
-      { error: "An error occurred during login" },
-      { status: 500 }
+    return new NextResponse(
+      JSON.stringify({ 
+        error: error instanceof Error ? error.message : "An error occurred during login" 
+      }),
+      { 
+        status: 500, 
+        headers: { 'Content-Type': 'application/json' } 
+      }
     )
   }
 } 

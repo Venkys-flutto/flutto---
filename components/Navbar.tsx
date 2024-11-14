@@ -67,7 +67,7 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden absolute right-0 top-16 w-64 bg-white/80 backdrop-blur-md shadow-lg border-l border-b border-gray-100">
+          <div className="md:hidden absolute right-0 top-16 w-64 bg-black backdrop-blur-md shadow-lg border-l border-b to-black">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col items-end">
               <Link
                 href="/"

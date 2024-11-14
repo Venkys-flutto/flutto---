@@ -7,10 +7,13 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { name, email, password } = body
 
+    console.log('Received signup request for:', email)
+
     if (!name || !email || !password) {
-      return NextResponse.json({
-        error: "Missing required fields"
-      }, { status: 400 })
+      return new NextResponse(
+        JSON.stringify({ error: "Missing required fields" }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      )
     }
 
     // Check if user exists
@@ -19,9 +22,10 @@ export async function POST(request: Request) {
     })
 
     if (existingUser) {
-      return NextResponse.json({
-        error: "User already exists"
-      }, { status: 409 })
+      return new NextResponse(
+        JSON.stringify({ error: "User already exists" }),
+        { status: 409, headers: { 'Content-Type': 'application/json' } }
+      )
     }
 
     // Hash the password
@@ -33,22 +37,38 @@ export async function POST(request: Request) {
         name,
         email,
         hashedPassword,
+        isFirstLogin: true
       },
     })
 
-    return NextResponse.json({
-      message: "User created successfully",
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email
+    console.log('Created user:', { id: user.id, email: user.email })
+
+    return new NextResponse(
+      JSON.stringify({
+        message: "User created successfully",
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          isFirstLogin: user.isFirstLogin
+        }
+      }),
+      { 
+        status: 201, 
+        headers: { 'Content-Type': 'application/json' } 
       }
-    }, { status: 201 })
+    )
 
   } catch (error) {
     console.error('Signup error:', error)
-    return NextResponse.json({
-      error: error instanceof Error ? error.message : "Internal server error"
-    }, { status: 500 })
+    return new NextResponse(
+      JSON.stringify({
+        error: error instanceof Error ? error.message : "Internal server error"
+      }),
+      { 
+        status: 500, 
+        headers: { 'Content-Type': 'application/json' } 
+      }
+    )
   }
 } 

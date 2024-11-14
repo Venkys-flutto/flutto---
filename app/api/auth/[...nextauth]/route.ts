@@ -89,12 +89,13 @@ const authOptions: AuthOptions = {
     },
     async session({ session, token }: { session: Session, token: JWT }) {
       if (session.user) {
-        session.user.id = token.id as string
+        session.user.id = token.sub as string
       }
       return session
     }
   },
-  debug: process.env.NODE_ENV === 'development',
+  //debug: process.env.NODE_ENV === 'development',
+  secret: process.env.NEXTAUTH_SECRET,
 }
 
 const handler = NextAuth(authOptions)
